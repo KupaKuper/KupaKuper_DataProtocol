@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KupaKuper_DataProtocol", "KupaKuper_DataProtocol\KupaKuper_DataProtocol.csproj", "{92F4C1F4-8618-113F-79BF-BAB4D2DB23E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpTestConsole", "HttpTestConsole\HttpTestConsole.csproj", "{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92F4C1F4-8618-113F-79BF-BAB4D2DB23E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F4C1F4-8618-113F-79BF-BAB4D2DB23E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F4C1F4-8618-113F-79BF-BAB4D2DB23E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F4C1F4-8618-113F-79BF-BAB4D2DB23E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C3C8B9C-4C14-4895-BA64-A3D83D05A93A}
+	EndGlobalSection
+EndGlobal
