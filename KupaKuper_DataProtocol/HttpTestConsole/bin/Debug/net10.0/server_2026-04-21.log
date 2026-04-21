@@ -1,0 +1,119 @@
+[13:21:37] [Info] Server started
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: 6b0d5bb4-e237-462d-b884-2d8dd7789ecd | GET /api/health | Status: 200 | Duration: 28.5952ms | Client: [::1]:59901
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: 56334dfb-4e55-44fe-8c4a-fb84b859b206 | GET /api/test | Status: 200 | Duration: 5.3773ms | Client: [::1]:59901
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: 50c3656a-ecfd-41df-9f06-0e4d6efc3b64 | POST /api/test | Status: 201 | Duration: 1.9422ms | Client: [::1]:59901
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: 6b5bb32c-9cbc-4462-be21-3370b4551847 | PUT /api/test | Status: 200 | Duration: 0.5017ms | Client: [::1]:59901
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: e28214fd-234f-4264-9449-86074fb5d60f | DELETE /api/test | Status: 200 | Duration: 0.4396ms | Client: [::1]:59901
+[13:21:39] [Info] [2026/4/21 13:21:39] RequestID: c3a57148-ae56-4a66-b0ab-78d258dbe45c | PATCH /api/test | Status: 200 | Duration: 0.4898ms | Client: [::1]:59901
+[13:21:39] [Info] Server stopped
+[13:21:39] [Error] Error in listener: Cannot access a disposed object.
+Object name: 'System.Threading.ThreadPoolBoundHandle'.
+[13:24:31] [Info] Server started
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: ba5f12cf-376d-4c79-9182-43f630276327 | GET /api/health | Status: 200 | Duration: 17.8719ms | Client: [::1]:62628
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: fda0d170-b91a-49d8-8150-6f45ec034417 | GET /api/test | Status: 200 | Duration: 2.9915ms | Client: [::1]:62628
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: c987896f-c99b-4d27-b5ea-2f58918f8042 | POST /api/test | Status: 201 | Duration: 1.8221ms | Client: [::1]:62628
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: d40ce4ca-18d6-4346-aed6-39163c47b2df | PUT /api/test | Status: 200 | Duration: 3.1221ms | Client: [::1]:62628
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: 002a2413-b335-47ef-9d29-d55bd38a92d1 | DELETE /api/test | Status: 200 | Duration: 2.9717ms | Client: [::1]:62628
+[13:24:33] [Info] [2026/4/21 13:24:33] RequestID: 90fe4308-41d8-49e5-8d54-3cd74e4f9f7d | PATCH /api/test | Status: 200 | Duration: 0.3351ms | Client: [::1]:62628
+[13:24:33] [Info] Server stopped
+[13:24:33] [Error] Error in listener: Cannot access a disposed object.
+Object name: 'System.Threading.ThreadPoolBoundHandle'.
+[13:36:24] [Info] Server started
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: 9f5191e4-f4f3-49d4-8554-30169ca1106b | GET /api/health | Status: 200 | Duration: 26.3147ms | Client: [::1]:57160
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: c03641cd-89bb-461a-bb27-c0c4860678aa | GET /api/test | Status: 200 | Duration: 4.7855ms | Client: [::1]:57160
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: 222d64dc-fb99-44da-a15b-aeda86ce3303 | POST /api/test | Status: 201 | Duration: 4.2812ms | Client: [::1]:57160
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: a96a5d2b-aec3-49fe-bc1a-f481793dcf26 | PUT /api/test | Status: 200 | Duration: 27.003ms | Client: [::1]:57160
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: b04c52a8-4233-424c-bd65-470cedaece50 | DELETE /api/test | Status: 200 | Duration: 5.8321ms | Client: [::1]:57160
+[13:36:25] [Info] [2026/4/21 13:36:25] RequestID: bdb85616-4e38-456c-bafd-9b3063f1370b | PATCH /api/test | Status: 200 | Duration: 0.4696ms | Client: [::1]:57160
+[13:36:25] [Info] Server stopped
+[13:36:25] [Error] Error in listener: Cannot access a disposed object.
+Object name: 'System.Threading.ThreadPoolBoundHandle'.
+[13:48:50] [Info] Server started
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: f6218dcf-9e0f-4740-b643-74bed60444ba | GET /api/health | Status: 200 | Duration: 20.2143ms | Client: [::1]:63337
+[13:48:51] [Info] Response Body: OK
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: ab5078f0-854a-47b1-9efe-ad333ed17e8b | GET /api/test | Status: 200 | Duration: 26.3985ms | Client: [::1]:63337
+[13:48:51] [Info] Response Body: Test endpoint
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: a2a2bd03-d2f5-4a42-a6af-f116a7a56c2e | POST /api/test | Status: 201 | Duration: 1.8051ms | Client: [::1]:63337
+[13:48:51] [Info] Request Body: {"Name":"Test","Value":123}
+[13:48:51] [Info] Response Body: Received: {"Name":"Test","Value":123}
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: 3e36715a-4c30-4c58-9c37-8463675658e4 | PUT /api/test | Status: 200 | Duration: 3.9077ms | Client: [::1]:63337
+[13:48:51] [Info] Request Body: {"Name":"Updated Test","Value":456}
+[13:48:51] [Info] Response Body: Updated: {"Name":"Updated Test","Value":456}
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: 8293fa09-ce65-4e62-a1cc-5c9e9582fb47 | DELETE /api/test | Status: 200 | Duration: 23.5221ms | Client: [::1]:63337
+[13:48:51] [Info] Response Body: Deleted
+[13:48:51] [Info] [2026/4/21 13:48:51] RequestID: fce6373a-29de-4235-a3e9-eba6af442d0e | PATCH /api/test | Status: 200 | Duration: 0.4571ms | Client: [::1]:63337
+[13:48:51] [Info] Request Body: {"Name":"Updated Test","Value":789}
+[13:48:51] [Info] Response Body: Patched: {"Name":"Updated Test","Value":789}
+[13:48:51] [Info] Server stopped
+[13:48:51] [Error] Error in listener: Cannot access a disposed object.
+Object name: 'System.Threading.ThreadPoolBoundHandle'.
+[14:09:02] [Info] Server started
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: b45cd0b6-9af9-4aab-b91b-ee29a239a210 | GET /api/health | Status: 200 | Duration: 21.2872ms | Client: [::1]:54331
+[14:09:04] [Info] Response Body: OK
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: 89947e6f-3986-4269-bcbf-c61b324987aa | GET /api/test | Status: 401 | Duration: 4.2111ms | Client: [::1]:54331
+[14:09:04] [Info] Response Body: Unauthorized
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: 01eb85ce-b9e1-4e05-b9a4-69a0fc157302 | POST /api/test | Status: 401 | Duration: 5.4662ms | Client: [::1]:54331
+[14:09:04] [Info] Request Body: {"Name":"Test","Value":123}
+[14:09:04] [Info] Response Body: Unauthorized
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: 89e54ca5-923d-4826-bc18-407cffeb450c | PUT /api/test | Status: 401 | Duration: 0.3511ms | Client: [::1]:54331
+[14:09:04] [Info] Request Body: {"Name":"Updated Test","Value":456}
+[14:09:04] [Info] Response Body: Unauthorized
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: 652bc811-9af2-493b-8b96-30947d866522 | DELETE /api/test | Status: 401 | Duration: 24.6163ms | Client: [::1]:54331
+[14:09:04] [Info] Response Body: Unauthorized
+[14:09:04] [Info] [2026/4/21 14:09:04] RequestID: 4244247a-b99b-47e3-ab88-bc73101dc4d9 | PATCH /api/test | Status: 401 | Duration: 0.2371ms | Client: [::1]:54331
+[14:09:04] [Info] Request Body: {"Name":"Updated Test","Value":789}
+[14:09:04] [Info] Response Body: Unauthorized
+[14:09:04] [Info] Server stopped
+[14:12:14] [Info] Server started
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: ae3ac16c-8a4f-44d0-ae8c-f6a87158cf38 | GET /api/health | Status: 200 | Duration: 15.1125ms | Client: [::1]:56734
+[14:12:16] [Info] Response Body: OK
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: 82d5a6a3-7a94-443c-bdc4-1420d89a6987 | GET /api/test | Status: 401 | Duration: 2.9314ms | Client: [::1]:56734
+[14:12:16] [Info] Response Body: Unauthorized
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: 946f235d-fc06-4d93-b73e-7023dc22b17c | POST /api/test | Status: 401 | Duration: 1.4886ms | Client: [::1]:56734
+[14:12:16] [Info] Request Body: {"Name":"Test","Value":123}
+[14:12:16] [Info] Response Body: Unauthorized
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: 306c83c1-49bb-4e35-8141-373aee61dd16 | PUT /api/test | Status: 401 | Duration: 2.5955ms | Client: [::1]:56734
+[14:12:16] [Info] Request Body: {"Name":"Updated Test","Value":456}
+[14:12:16] [Info] Response Body: Unauthorized
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: 62cc19c3-0a42-45e1-ae41-d9d6e758e764 | DELETE /api/test | Status: 401 | Duration: 24.7124ms | Client: [::1]:56734
+[14:12:16] [Info] Response Body: Unauthorized
+[14:12:16] [Info] [2026/4/21 14:12:16] RequestID: c966f988-9c77-4824-a5ce-95b313764d83 | PATCH /api/test | Status: 401 | Duration: 0.2132ms | Client: [::1]:56734
+[14:12:16] [Info] Request Body: {"Name":"Updated Test","Value":789}
+[14:12:16] [Info] Response Body: Unauthorized
+[14:12:16] [Info] Server stopped
+[14:15:22] [Info] Server started
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: 33e820d0-3cf9-4aaa-ad8a-1762ac1bea40 | GET /api/health | Status: 200 | Duration: 14.5563ms | Client: [::1]:58552
+[14:15:23] [Info] Response Body: OK
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: 821ca47b-84d0-43f0-a177-9c5d3ec57238 | GET /api/test | Status: 401 | Duration: 2.6485ms | Client: [::1]:58552
+[14:15:23] [Info] Response Body: Unauthorized
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: f88e1819-ed9d-479f-a666-b1559cbb1982 | POST /api/test | Status: 401 | Duration: 1.7944ms | Client: [::1]:58552
+[14:15:23] [Info] Request Body: {"Name":"Test","Value":123}
+[14:15:23] [Info] Response Body: Unauthorized
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: aac3ff67-89f1-4d42-aeda-6eecaa83efd1 | PUT /api/test | Status: 401 | Duration: 2.5681ms | Client: [::1]:58552
+[14:15:23] [Info] Request Body: {"Name":"Updated Test","Value":456}
+[14:15:23] [Info] Response Body: Unauthorized
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: 31c76f67-5141-402c-a226-4c934cc1675f | DELETE /api/test | Status: 401 | Duration: 2.4237ms | Client: [::1]:58552
+[14:15:23] [Info] Response Body: Unauthorized
+[14:15:23] [Info] [2026/4/21 14:15:23] RequestID: 571c0af5-40c8-443e-a9ac-a447016974a8 | PATCH /api/test | Status: 401 | Duration: 0.1982ms | Client: [::1]:58552
+[14:15:23] [Info] Request Body: {"Name":"Updated Test","Value":789}
+[14:15:23] [Info] Response Body: Unauthorized
+[14:15:23] [Info] Server stopped
+[14:32:20] [Info] Server started
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: fb6a60c5-c645-4f18-8310-c41ede7a4e00 | GET /api/health | Status: 200 | Duration: 17.124ms | Client: [::1]:59528
+[14:32:21] [Info] Response Body: OK
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: e76c7057-a401-4060-b784-1b7f63813719 | GET /api/test | Status: 200 | Duration: 23.279ms | Client: [::1]:59528
+[14:32:21] [Info] Response Body: Test endpoint
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: 3c05f3bf-47e0-46b9-97a0-5f5d4f03e62d | POST /api/test | Status: 201 | Duration: 1.6802ms | Client: [::1]:59528
+[14:32:21] [Info] Request Body: {"Name":"Test","Value":123}
+[14:32:21] [Info] Response Body: Received: {"Name":"Test","Value":123}
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: 89f30cf6-f679-44e9-87ae-afdc5cf0332b | PUT /api/test | Status: 200 | Duration: 3.6213ms | Client: [::1]:59528
+[14:32:21] [Info] Request Body: {"Name":"Updated Test","Value":456}
+[14:32:21] [Info] Response Body: Updated: {"Name":"Updated Test","Value":456}
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: b9ad040a-42d1-4d80-af08-370abb27da0b | DELETE /api/test | Status: 200 | Duration: 25.4146ms | Client: [::1]:59528
+[14:32:21] [Info] Response Body: Deleted
+[14:32:21] [Info] [2026/4/21 14:32:21] RequestID: c83fd583-e6dd-4c63-af95-7d226d12638d | PATCH /api/test | Status: 200 | Duration: 0.8531ms | Client: [::1]:59528
+[14:32:21] [Info] Request Body: {"Name":"Updated Test","Value":789}
+[14:32:21] [Info] Response Body: Patched: {"Name":"Updated Test","Value":789}
+[14:32:21] [Info] Server stopped
+[14:32:22] [Error] Error in listener: Cannot access a disposed object.
+Object name: 'System.Threading.ThreadPoolBoundHandle'.

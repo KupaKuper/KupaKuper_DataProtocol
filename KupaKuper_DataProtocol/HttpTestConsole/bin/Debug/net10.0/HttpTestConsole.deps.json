@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "HttpTestConsole/1.0.0": {
+        "dependencies": {
+          "KupaKuper_DataProtocol": "1.0.0"
+        },
+        "runtime": {
+          "HttpTestConsole.dll": {}
+        }
+      },
+      "KupaKuper_DataProtocol/1.0.0": {
+        "runtime": {
+          "KupaKuper_DataProtocol.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HttpTestConsole/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "KupaKuper_DataProtocol/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

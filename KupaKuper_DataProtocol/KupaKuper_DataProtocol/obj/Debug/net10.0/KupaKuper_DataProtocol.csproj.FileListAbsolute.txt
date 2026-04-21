@@ -1,0 +1,15 @@
+C:\Users\26060\Documents\VsProject\KupaKuper_TcpIp\obj\Debug\net10.0\KupaKuper_DataProtocol.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\26060\Documents\VsProject\KupaKuper_TcpIp\obj\Debug\net10.0\KupaKuper_DataProtocol.AssemblyInfoInputs.cache
+C:\Users\26060\Documents\VsProject\KupaKuper_TcpIp\obj\Debug\net10.0\KupaKuper_DataProtocol.AssemblyInfo.cs
+C:\Users\26060\Documents\VsProject\KupaKuper_TcpIp\obj\Debug\net10.0\KupaKuper_DataProtocol.csproj.CoreCompileInputs.cache
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\bin\Debug\net10.0\KupaKuper_DataProtocol.deps.json
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\bin\Debug\net10.0\KupaKuper_DataProtocol.dll
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\bin\Debug\net10.0\KupaKuper_DataProtocol.pdb
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.AssemblyInfoInputs.cache
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.AssemblyInfo.cs
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.csproj.CoreCompileInputs.cache
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.dll
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\refint\KupaKuper_DataProtocol.dll
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\KupaKuper_DataProtocol.pdb
+C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\obj\Debug\net10.0\ref\KupaKuper_DataProtocol.dll

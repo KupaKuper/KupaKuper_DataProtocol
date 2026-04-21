@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>KupaKuper_DataProtocol</Title>
+    <Version>1.0.0</Version>
+    <Authors>KupaKuper</Authors>
+    <Company>KupaKuper</Company>
+    <Description>工业常用的数据传输协议,包含TCP_IP,HTTP协议</Description>
+    <PackageIcon>hjh.png</PackageIcon>
+    <PackageReleaseNotes>添加TCP_IP服务器与客户端类,
+添加HTTP服务器与客户端类</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Pictures\Saved Pictures\hjh.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

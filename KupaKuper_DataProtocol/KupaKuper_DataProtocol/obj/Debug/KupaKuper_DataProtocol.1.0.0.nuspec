@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>KupaKuper_DataProtocol</id>
+    <version>1.0.0</version>
+    <title>KupaKuper_DataProtocol</title>
+    <authors>KupaKuper</authors>
+    <icon>hjh.png</icon>
+    <description>工业常用的数据传输协议,包含TCP_IP,HTTP协议</description>
+    <releaseNotes>添加TCP_IP服务器与客户端类,
+添加HTTP服务器与客户端类</releaseNotes>
+    <repository type="git" />
+    <dependencies>
+      <group targetFramework="net10.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\26060\Documents\VsProject\KupaKuper_DataProtocol\KupaKuper_DataProtocol\bin\Debug\net10.0\KupaKuper_DataProtocol.dll" target="lib\net10.0\KupaKuper_DataProtocol.dll" />
+    <file src="C:\Users\26060\Pictures\Saved Pictures\hjh.png" target="\hjh.png" />
+  </files>
+</package>
