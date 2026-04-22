@@ -17,7 +17,6 @@ namespace HttpTestConsole
             _server = new Http_Server(port: _port);
             
             // 设置日志目录
-            _server.LogDirectory = "D:\\HTTP_Logs";
             _server.LogToFile = true;
             
             // 订阅日志事件
@@ -233,7 +232,7 @@ namespace HttpTestConsole
         {
             Console.WriteLine($"服务器状态: {(_isRunning ? "运行中" : "已停止")}");
             Console.WriteLine($"监听端口: {_port}");
-            Console.WriteLine($"服务器IP: {_server.ServerIP}");
+            Console.WriteLine($"服务器IP: {_server.ServerIp}");
         }
 
         /// <summary>

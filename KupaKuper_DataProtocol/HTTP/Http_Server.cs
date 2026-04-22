@@ -57,6 +57,10 @@ namespace KupaKuper_DataProtocol.HTTP
                 EnsureLogDirectoryExists();
             }
         }
+        /// <summary>
+        /// 获取服务器 IP 地址
+        /// </summary>
+        public string ServerIp { get; private set; }
 
         /// <summary>
         /// 初始化 HTTP 服务器
@@ -98,6 +102,7 @@ namespace KupaKuper_DataProtocol.HTTP
                 ipPrefix += "/";
             _listener.Prefixes.Add(localhostPrefix);
             _listener.Prefixes.Add(ipPrefix);
+            ServerIp = string.Join(";", _listener.Prefixes);
 
             if (useHttps && !string.IsNullOrEmpty(certificatePath))
             {
@@ -120,7 +125,6 @@ namespace KupaKuper_DataProtocol.HTTP
             _listener.Start();
             IsRunning = true;
             LogMessage("Server started", LogLevel.Info);
-
             // 开始监听请求
             Task.Run(async () => await ListenAsync());
         }

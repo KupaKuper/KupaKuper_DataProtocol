@@ -132,6 +132,7 @@ namespace KupaKuper_DataProtocol.HTTP
                 // GET 请求
                 HttpResponseMessage response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[GET] 请求URL: {url}");
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 LogMessage($"响应: {responseBody}");
@@ -163,6 +164,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpContent httpContent = new StringContent(contentString, Encoding.UTF8, header);
                 HttpResponseMessage response = await client.PostAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[POST] 请求URL: {url}, 内容: {contentString}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 LogMessage($"响应: {responseBody}");
                 return responseBody;
@@ -191,6 +194,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpContent httpContent = new StringContent(content, Encoding.UTF8, header);
                 HttpResponseMessage response = await client.PostAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[POST] 请求URL: {url}, 内容: {content}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 LogMessage($"响应: {responseBody}");
                 return responseBody;
@@ -221,6 +226,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpContent httpContent = new StringContent(contentString, Encoding.UTF8, header);
                 HttpResponseMessage response = await client.PutAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[PUT] 请求URL: {url}, 内容: {contentString}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 LogMessage($"响应: {responseBody}");
                 return responseBody;
@@ -249,6 +256,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpContent httpContent = new StringContent(content, Encoding.UTF8, header);
                 HttpResponseMessage response = await client.PutAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[PUT] 请求URL: {url}, 内容: {content}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 LogMessage($"响应: {responseBody}");
                 return responseBody;
@@ -273,6 +282,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 // DELETE 请求
                 HttpResponseMessage response = await client.DeleteAsync(url);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[DELETE] 请求URL: {url}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
                 return responseBody;
@@ -306,6 +317,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 };
                 HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[PATCH] 请求URL: {url}, 内容: {contentString}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
                 return responseBody;
@@ -337,6 +350,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 };
                 HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                 LogMessage($"[PATCH] 请求URL: {url}, 内容: {content}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
                 return responseBody;
@@ -365,6 +380,8 @@ namespace KupaKuper_DataProtocol.HTTP
                 }
                 HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
+                LogMessage($"[GET] 请求URL: {url}, 自定义头: {string.Join(", ", headers.Select(h => $"{h.Key}: {h.Value}"))}");
+
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
                 return responseBody;
