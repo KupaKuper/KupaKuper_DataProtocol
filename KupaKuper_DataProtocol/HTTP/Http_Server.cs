@@ -14,12 +14,12 @@ namespace KupaKuper_DataProtocol.HTTP
     {
         private readonly HttpListener _listener;
         private readonly string _basePath;
-        private readonly string _logDirectory;
         private readonly Dictionary<string, RouteInfo> _routes;
         private readonly Dictionary<string, int> _requestRateLimit;
         private readonly object _rateLimitLock = new object();
         private bool _disposed = false;
         private bool _logToFile = true;
+        private string _logDirectory;
 
         /// <summary>
         /// 获取服务器是否正在运行
@@ -46,6 +46,19 @@ namespace KupaKuper_DataProtocol.HTTP
         }
 
         /// <summary>
+        /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
+        /// </summary>
+        public string LogDirectory
+        {
+            get => _logDirectory;
+            set
+            {
+                _logDirectory = value;
+                EnsureLogDirectoryExists();
+            }
+        }
+
+        /// <summary>
         /// 初始化 HTTP 服务器
         /// </summary>
         /// <param name="basePath">服务器基础路径</param>
@@ -54,19 +67,13 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <param name="useHttps">是否使用 HTTPS</param>
         /// <param name="certificatePath">TLS 证书路径</param>
         /// <param name="certificatePassword">TLS 证书密码</param>
-        public Http_Server(string basePath = "", int port = 8080, string logDirectory = null, bool useHttps = false, string certificatePath = null, string certificatePassword = null)
+        public Http_Server(string basePath = "", int port = 8080, bool useHttps = false, string certificatePath = null, string certificatePassword = null)
         {
             _basePath = basePath.TrimEnd('/');
             // 设置默认日志目录
             _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             _routes = new Dictionary<string, RouteInfo>();
             _requestRateLimit = new Dictionary<string, int>();
-
-            // 确保日志目录存在
-            if (!Directory.Exists(_logDirectory))
-            {
-                Directory.CreateDirectory(_logDirectory);
-            }
 
             // 配置服务器
             Config = new ServerConfig
@@ -471,6 +478,14 @@ namespace KupaKuper_DataProtocol.HTTP
         ~Http_Server()
         {
             Dispose(false);
+        }
+
+        private void EnsureLogDirectoryExists()
+        {
+            if (!string.IsNullOrEmpty(_logDirectory) && !Directory.Exists(_logDirectory))
+            {
+                Directory.CreateDirectory(_logDirectory);
+            }
         }
     }
 

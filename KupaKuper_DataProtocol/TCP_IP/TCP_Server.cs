@@ -41,7 +41,8 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 心跳检测任务
         /// </summary>
         private Task _heartbeatTask;
-        
+        private string _logDirectory;
+
         /// <summary>
         /// 服务器监听端口
         /// </summary>
@@ -57,12 +58,20 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 心跳循环时间(秒)
         /// </summary>
         public int HeartBeatCyclicTime { get; set; } = 5;
-        
+
         /// <summary>
         /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
         /// </summary>
-        public string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
-        
+        public string LogDirectory
+        {
+            get => _logDirectory;
+            set
+            {
+                _logDirectory = value;
+                EnsureLogDirectoryExists();
+            }
+        }
+
         /// <summary>
         /// 是否启用文件日志，默认 true
         /// </summary>
@@ -97,16 +106,16 @@ namespace KupaKuper_TcpIp.TCP_IP
             _connections = new Dictionary<string, TCP_Connection>();
             _tcpClients = new Dictionary<string, TcpClient>();
             _cancellationTokenSource = new CancellationTokenSource();
-            
-            // 确保日志目录存在
-            EnsureLogDirectoryExists();
+
+            // 设置默认日志目录
+            _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
         }
-        
+
         private void EnsureLogDirectoryExists()
         {
-            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            if (!string.IsNullOrEmpty(_logDirectory) && !Directory.Exists(_logDirectory))
             {
-                Directory.CreateDirectory(LogDirectory);
+                Directory.CreateDirectory(_logDirectory);
             }
         }
         
@@ -122,7 +131,7 @@ namespace KupaKuper_TcpIp.TCP_IP
             {
                 try
                 {
-                    string logFile = Path.Combine(LogDirectory, $"tcp_server_{DateTime.Now:yyyy-MM-dd}.log");
+                    string logFile = Path.Combine(_logDirectory, $"tcp_server_{DateTime.Now:yyyy-MM-dd}.log");
                     File.AppendAllText(logFile, fullMsg + Environment.NewLine);
                 }
                 catch (Exception ex)

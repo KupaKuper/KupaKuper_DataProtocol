@@ -13,16 +13,26 @@ namespace KupaKuper_DataProtocol.HTTP
         /// HttpClient 是一个线程安全的类，建议在应用程序的整个生命周期内重用一个实例。
         /// </summary>
         private static readonly HttpClient client = new HttpClient();
+        private static string _logDirectory;
+
         /// <summary>
         /// 获取HttpClient实例
         /// </summary>
         public static HttpClient Help { get { return client; } }
-        
+
         /// <summary>
         /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
         /// </summary>
-        public static string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
-        
+        public static string LogDirectory
+        {
+            get => _logDirectory;
+            set
+            {
+                _logDirectory = value;
+                EnsureLogDirectoryExists();
+            }
+        }
+
         /// <summary>
         /// 是否启用文件日志，默认 true
         /// </summary>
@@ -37,16 +47,19 @@ namespace KupaKuper_DataProtocol.HTTP
         {
             // 设置默认超时时间为30秒
             client.Timeout = TimeSpan.FromSeconds(30);
-            
+
+            // 设置默认日志目录
+            _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+
             // 确保日志目录存在
             EnsureLogDirectoryExists();
         }
         
         private static void EnsureLogDirectoryExists()
         {
-            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            if (!string.IsNullOrEmpty(_logDirectory) && !Directory.Exists(_logDirectory))
             {
-                Directory.CreateDirectory(LogDirectory);
+                Directory.CreateDirectory(_logDirectory);
             }
         }
         
@@ -62,7 +75,7 @@ namespace KupaKuper_DataProtocol.HTTP
             {
                 try
                 {
-                    string logFile = Path.Combine(LogDirectory, $"http_client_{DateTime.Now:yyyy-MM-dd}.log");
+                    string logFile = Path.Combine(_logDirectory, $"http_client_{DateTime.Now:yyyy-MM-dd}.log");
                     File.AppendAllText(logFile, fullMsg + Environment.NewLine);
                 }
                 catch (Exception ex)

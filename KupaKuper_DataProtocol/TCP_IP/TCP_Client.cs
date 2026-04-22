@@ -74,6 +74,7 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 心跳检测取消令牌源
         /// </summary>
         private CancellationTokenSource _heartbeatCancellationTokenSource;
+        private string _logDirectory;
 
         /// <summary>
         /// 心跳消息内容
@@ -89,12 +90,20 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 本地客户端端口号
         /// </summary>
         public int ClientPort { get; set; }
-        
+
         /// <summary>
         /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
         /// </summary>
-        public string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
-        
+        public string LogDirectory
+        {
+            get => _logDirectory;
+            set
+            {
+                _logDirectory = value;
+                EnsureLogDirectoryExists();
+            }
+        }
+
         /// <summary>
         /// 是否启用文件日志，默认 true
         /// </summary>
@@ -138,16 +147,16 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             ServerIP = serverIp;
             ServerPort = serverPort;
-            
-            // 确保日志目录存在
-            EnsureLogDirectoryExists();
+
+            // 设置默认日志目录
+            _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
         }
-        
+
         private void EnsureLogDirectoryExists()
         {
-            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            if (!string.IsNullOrEmpty(_logDirectory) && !Directory.Exists(_logDirectory))
             {
-                Directory.CreateDirectory(LogDirectory);
+                Directory.CreateDirectory(_logDirectory);
             }
         }
         
@@ -163,7 +172,7 @@ namespace KupaKuper_TcpIp.TCP_IP
             {
                 try
                 {
-                    string logFile = Path.Combine(LogDirectory, $"tcp_client_{DateTime.Now:yyyy-MM-dd}.log");
+                    string logFile = Path.Combine(_logDirectory, $"tcp_client_{DateTime.Now:yyyy-MM-dd}.log");
                     File.AppendAllText(logFile, fullMsg + Environment.NewLine);
                 }
                 catch (Exception ex)
