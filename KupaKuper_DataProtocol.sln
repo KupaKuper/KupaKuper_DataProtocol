@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KupaKuper_DataProtocol", "K
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpTestConsole", "HttpTestConsole\HttpTestConsole.csproj", "{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttTestConsole", "MqttTestConsole\MqttTestConsole.csproj", "{96F3BFEB-F7EF-48A4-97CE-3FB281F5E379}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A72E14FE-8A07-D4E2-3974-AD3F7DA4A961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F3BFEB-F7EF-48A4-97CE-3FB281F5E379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F3BFEB-F7EF-48A4-97CE-3FB281F5E379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F3BFEB-F7EF-48A4-97CE-3FB281F5E379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F3BFEB-F7EF-48A4-97CE-3FB281F5E379}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

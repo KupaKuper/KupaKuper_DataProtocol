@@ -9,7 +9,7 @@ namespace HttpTestConsole
             Console.WriteLine("================");
 
             // 初始化 HTTP 服务器
-            var httpServer = new HttpServer(port: 8888);
+            var httpServer = new Http_Server(port: 8888);
 
             // 注册测试路由
             httpServer.RegisterController<ControllerExample>();
@@ -50,7 +50,7 @@ namespace HttpTestConsole
             Console.ReadKey();
         }
         public static Data data = new Data();
-        static void RegisterTestRoutes(HttpServer server)
+        static void RegisterTestRoutes(Http_Server server)
         {
             // 健康检查路由
             server.Get("/api/health", (req) =>
@@ -93,12 +93,12 @@ namespace HttpTestConsole
         {
             Console.WriteLine("\n测试 GET 请求:");
             string url = "http://localhost:8888/api/health";
-            string response = await HttpClientHelp.GetStringAsync(url);
+            string response = await Http_Client.GetStringAsync(url);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"响应: {response}");
 
             url = "http://localhost:8888/api/test";
-            response = await HttpClientHelp.GetStringAsync(url);
+            response = await Http_Client.GetStringAsync(url);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"响应: {response}");
         }
@@ -109,7 +109,7 @@ namespace HttpTestConsole
             string url = "http://localhost:8888/api/test";
             data.Name = "Test";
             data.Value = 123;
-            string response = await HttpClientHelp.PostStringAsync<Data>(url, data);
+            string response = await Http_Client.PostStringAsync<Data>(url, data);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"数据: {data}");
             Console.WriteLine($"响应: {response}");
@@ -121,7 +121,7 @@ namespace HttpTestConsole
             string url = "http://localhost:8888/api/test";
             data.Name = "Updated Test";
             data.Value = 456;
-            string response = await HttpClientHelp.PutStringAsync<Data>(url, data);
+            string response = await Http_Client.PutStringAsync<Data>(url, data);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"数据: {data}");
             Console.WriteLine($"响应: {response}");
@@ -131,7 +131,7 @@ namespace HttpTestConsole
         {
             Console.WriteLine("\n测试 DELETE 请求:");
             string url = "http://localhost:8888/api/test";
-            string response = await HttpClientHelp.DeleteAsync(url);
+            string response = await Http_Client.DeleteAsync(url);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"响应: {response}");
         }
@@ -141,7 +141,7 @@ namespace HttpTestConsole
             Console.WriteLine("\n测试 PATCH 请求:");
             string url = "http://localhost:8888/api/test";
             data.Value = 789;
-            string response = await HttpClientHelp.PatchStringAsync<Data>(url, data);
+            string response = await Http_Client.PatchStringAsync<Data>(url, data);
             Console.WriteLine($"URL: {url}");
             Console.WriteLine($"数据: {data}");
             Console.WriteLine($"响应: {response}");

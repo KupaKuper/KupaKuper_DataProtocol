@@ -10,7 +10,7 @@ namespace KupaKuper_DataProtocol.HTTP
     /// <summary>
     /// HTTP 服务器类，基于 MVC 模式实现
     /// </summary>
-    public class HttpServer : IDisposable
+    public class Http_Server : IDisposable
     {
         private readonly HttpListener _listener;
         private readonly string _basePath;
@@ -19,6 +19,7 @@ namespace KupaKuper_DataProtocol.HTTP
         private readonly Dictionary<string, int> _requestRateLimit;
         private readonly object _rateLimitLock = new object();
         private bool _disposed = false;
+        private bool _logToFile = true;
 
         /// <summary>
         /// 获取服务器是否正在运行
@@ -31,6 +32,20 @@ namespace KupaKuper_DataProtocol.HTTP
         public ServerConfig Config { get; }
 
         /// <summary>
+        /// 日志输出事件，可绑定自定义日志处理（如写入文件、数据库）
+        /// </summary>
+        public event Action<string> Log;
+
+        /// <summary>
+        /// 是否启用文件日志，默认 true
+        /// </summary>
+        public bool LogToFile
+        {
+            get => _logToFile;
+            set => _logToFile = value;
+        }
+
+        /// <summary>
         /// 初始化 HTTP 服务器
         /// </summary>
         /// <param name="basePath">服务器基础路径</param>
@@ -39,10 +54,11 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <param name="useHttps">是否使用 HTTPS</param>
         /// <param name="certificatePath">TLS 证书路径</param>
         /// <param name="certificatePassword">TLS 证书密码</param>
-        public HttpServer(string basePath = "", int port = 8080, string logDirectory = null, bool useHttps = false, string certificatePath = null, string certificatePassword = null)
+        public Http_Server(string basePath = "", int port = 8080, string logDirectory = null, bool useHttps = false, string certificatePath = null, string certificatePassword = null)
         {
             _basePath = basePath.TrimEnd('/');
-            _logDirectory = logDirectory ?? Directory.GetCurrentDirectory();
+            // 设置默认日志目录
+            _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             _routes = new Dictionary<string, RouteInfo>();
             _requestRateLimit = new Dictionary<string, int>();
 
@@ -96,7 +112,7 @@ namespace KupaKuper_DataProtocol.HTTP
 
             _listener.Start();
             IsRunning = true;
-            Log("Server started", LogLevel.Info);
+            LogMessage("Server started", LogLevel.Info);
 
             // 开始监听请求
             Task.Run(async () => await ListenAsync());
@@ -112,7 +128,7 @@ namespace KupaKuper_DataProtocol.HTTP
 
             _listener.Stop();
             IsRunning = false;
-            Log("Server stopped", LogLevel.Info);
+            LogMessage("Server stopped", LogLevel.Info);
         }
 
         /// <summary>
@@ -180,7 +196,7 @@ namespace KupaKuper_DataProtocol.HTTP
                 }
                 catch (Exception ex)
                 {
-                    Log($"Error in listener: {ex.Message}", LogLevel.Error);
+                    LogMessage($"Error in listener: {ex.Message}", LogLevel.Error);
                 }
             }
         }
@@ -236,7 +252,7 @@ namespace KupaKuper_DataProtocol.HTTP
             catch (Exception ex)
             {
                 await SendResponseAsync(response, 500, "Internal Server Error");
-                Log($"Error processing request: {ex.Message}", LogLevel.Error);
+                LogMessage($"Error processing request: {ex.Message}", LogLevel.Error);
                 LogRequest(requestId, request, string.Empty, 500, "Internal Server Error", DateTime.Now - startTime);
             }
             finally
@@ -369,36 +385,40 @@ namespace KupaKuper_DataProtocol.HTTP
         private void LogRequest(string requestId, HttpListenerRequest request, string requestBody, int statusCode, string responseBody, TimeSpan duration)
         {
             string logMessage = $"[{DateTime.Now}] RequestID: {requestId} | {request.HttpMethod} {request.Url.LocalPath} | Status: {statusCode} | Duration: {duration.TotalMilliseconds}ms | Client: {request.RemoteEndPoint}";
-            Log(logMessage, LogLevel.Info);
+            LogMessage(logMessage, LogLevel.Info);
             
             // 记录请求体
             if (!string.IsNullOrEmpty(requestBody))
             {
-                Log($"Request Body: {requestBody}", LogLevel.Info);
+                LogMessage($"Request Body: {requestBody}", LogLevel.Info);
             }
             
             // 记录响应体
             if (!string.IsNullOrEmpty(responseBody))
             {
-                Log($"Response Body: {responseBody}", LogLevel.Info);
+                LogMessage($"Response Body: {responseBody}", LogLevel.Info);
             }
         }
 
         /// <summary>
         /// 记录日志
         /// </summary>
-        private void Log(string message, LogLevel level)
+        private void LogMessage(string message, LogLevel level)
         {
             string logFile = Path.Combine(_logDirectory, $"server_{DateTime.Now:yyyy-MM-dd}.log");
             string logEntry = $"[{DateTime.Now:HH:mm:ss}] [{level}] {message}";
-            
-            try
+            Log?.Invoke(logEntry + Environment.NewLine);
+
+            if (_logToFile)
             {
-                File.AppendAllText(logFile, logEntry + Environment.NewLine);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error writing to log: {ex.Message}");
+                try
+                {
+                    File.AppendAllText(logFile, logEntry + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error writing to log: {ex.Message}");
+                }
             }
         }
 
@@ -448,7 +468,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 析构函数
         /// </summary>
-        ~HttpServer()
+        ~Http_Server()
         {
             Dispose(false);
         }
@@ -653,7 +673,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 注册 GET 路由
         /// </summary>
-        public static void Get(this HttpServer server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
+        public static void Get(this Http_Server server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
         {
             server.RegisterRoute(path, handler, "GET", requireAuth);
         }
@@ -661,7 +681,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 注册 POST 路由
         /// </summary>
-        public static void Post(this HttpServer server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
+        public static void Post(this Http_Server server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
         {
             server.RegisterRoute(path, handler, "POST", requireAuth);
         }
@@ -669,7 +689,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 注册 PUT 路由
         /// </summary>
-        public static void Put(this HttpServer server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
+        public static void Put(this Http_Server server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
         {
             server.RegisterRoute(path, handler, "PUT", requireAuth);
         }
@@ -677,7 +697,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 注册 DELETE 路由
         /// </summary>
-        public static void Delete(this HttpServer server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
+        public static void Delete(this Http_Server server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
         {
             server.RegisterRoute(path, handler, "DELETE", requireAuth);
         }
@@ -685,7 +705,7 @@ namespace KupaKuper_DataProtocol.HTTP
         /// <summary>
         /// 注册 PATCH 路由
         /// </summary>
-        public static void Patch(this HttpServer server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
+        public static void Patch(this Http_Server server, string path, Func<HttpRequest, HttpResponse> handler, bool requireAuth = false)
         {
             server.RegisterRoute(path, handler, "PATCH", requireAuth);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
 
 namespace KupaKuper_TcpIp.TCP_IP
 {
@@ -88,6 +89,21 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 本地客户端端口号
         /// </summary>
         public int ClientPort { get; set; }
+        
+        /// <summary>
+        /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
+        /// </summary>
+        public string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+        
+        /// <summary>
+        /// 是否启用文件日志，默认 true
+        /// </summary>
+        public bool LogToFile { get; set; } = true;
+        
+        /// <summary>
+        /// 日志输出事件，可绑定自定义日志处理
+        /// </summary>
+        public event Action<string> Log;
 
         // ========== 公共事件 ==========
 
@@ -122,6 +138,43 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             ServerIP = serverIp;
             ServerPort = serverPort;
+            
+            // 确保日志目录存在
+            EnsureLogDirectoryExists();
+        }
+        
+        private void EnsureLogDirectoryExists()
+        {
+            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            {
+                Directory.CreateDirectory(LogDirectory);
+            }
+        }
+        
+        private void LogMessage(string msg)
+        {
+            string fullMsg = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [TCP_Client] {msg}";
+            
+            // 触发外部日志事件
+            Log?.Invoke(fullMsg);
+            
+            // 写入文件日志
+            if (LogToFile)
+            {
+                try
+                {
+                    string logFile = Path.Combine(LogDirectory, $"tcp_client_{DateTime.Now:yyyy-MM-dd}.log");
+                    File.AppendAllText(logFile, fullMsg + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    // 日志写入失败时，输出到控制台
+                    Console.WriteLine($"[日志错误] {ex.Message}");
+                }
+            }
+            
+            // 默认输出到控制台
+            Console.WriteLine(fullMsg);
         }
 
         // ========== 公共方法 ==========
@@ -133,6 +186,7 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             try
             {
+                LogMessage($"正在连接服务器 {ServerIP}:{ServerPort}...");
                 // 连接到服务器
                 _cancellationTokenSource = new CancellationTokenSource();
                 _client = new TcpClient();
@@ -144,6 +198,7 @@ namespace KupaKuper_TcpIp.TCP_IP
                 {
                     ClientIP = localEndPoint.Address.ToString();
                     ClientPort = localEndPoint.Port;
+                    LogMessage($"连接成功，本地地址: {ClientIP}:{ClientPort}");
                 }
                 // 设置连接状态
                 IsConnected = true;
@@ -153,13 +208,17 @@ namespace KupaKuper_TcpIp.TCP_IP
                 {
                     _heartbeatCancellationTokenSource = new CancellationTokenSource();
                     _heartbeatTask = Task.Run(() => HeartbeatLoopAsync(_heartbeatCancellationTokenSource.Token));
+                    LogMessage("已启动心跳检测");
                 }
                 // 开始接收数据
                 _ = ReceiveDataAsync(_cancellationTokenSource.Token);
+                LogMessage("开始接收数据");
             }
             catch (Exception ex)
             {
-                OnError?.Invoke($"连接服务器失败: {ex.Message}");
+                string errorMsg = $"连接服务器失败: {ex.Message}";
+                LogMessage(errorMsg);
+                OnError?.Invoke(errorMsg);
                 IsConnected = false;
                 ConnectedChanged?.Invoke(false);
             }
@@ -236,12 +295,15 @@ namespace KupaKuper_TcpIp.TCP_IP
                 var data = Encoding.UTF8.GetBytes(message);
                 await _stream.WriteAsync(data, 0, data.Length);
                 Message.Add($"发送: {message}");
+                LogMessage($"发送消息: {message}");
                 OnMessageSend?.Invoke(message);
                 return true;
             }
             catch (Exception ex)
             {
-                OnError?.Invoke($"发送消息失败: {ex.Message}");
+                string errorMsg = $"发送消息失败: {ex.Message}";
+                LogMessage(errorMsg);
+                OnError?.Invoke(errorMsg);
                 // 发送失败，异常断开连接
                 IsConnected = false;
                 ConnectedChanged.Invoke(false);
@@ -276,8 +338,9 @@ namespace KupaKuper_TcpIp.TCP_IP
                     }
                     
                     var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    Message.Add($"接收: {message}");
-                    OnMessageReceive?.Invoke(message);
+                Message.Add($"接收: {message}");
+                LogMessage($"接收消息: {message}");
+                OnMessageReceive?.Invoke(message);
                 }
             }
             catch (OperationCanceledException)
@@ -286,7 +349,9 @@ namespace KupaKuper_TcpIp.TCP_IP
             }
             catch (Exception ex)
             {
-                OnError?.Invoke($"接收数据失败: {ex.Message}");
+                string errorMsg = $"接收数据失败: {ex.Message}";
+                LogMessage(errorMsg);
+                OnError?.Invoke(errorMsg);
             }
             finally
             {
@@ -294,6 +359,7 @@ namespace KupaKuper_TcpIp.TCP_IP
                 if (IsConnected)
                 {
                     IsConnected = false;
+                    LogMessage("连接已关闭");
                     ConnectedChanged?.Invoke(false);
                 }
             }
@@ -313,6 +379,7 @@ namespace KupaKuper_TcpIp.TCP_IP
                     {
                         // 发送心跳消息
                         await SendMessageAsync(HeartBeatMessage);
+                        LogMessage($"发送心跳消息: {HeartBeatMessage}");
                         
                         // 延时 5 秒
                         await Task.Delay(TimeSpan.FromSeconds(HeartBeatCyclicTime), cancellationToken);
@@ -323,7 +390,9 @@ namespace KupaKuper_TcpIp.TCP_IP
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke($"心跳检测失败: {ex.Message}");
+                        string errorMsg = $"心跳检测失败: {ex.Message}";
+                        LogMessage(errorMsg);
+                        OnError?.Invoke(errorMsg);
                         // 发生异常，异常断开连接
                         IsConnected = false;
                         ConnectedChanged.Invoke(false);
@@ -343,7 +412,9 @@ namespace KupaKuper_TcpIp.TCP_IP
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke($"重连失败: {ex.Message}");
+                        string errorMsg = $"重连失败: {ex.Message}";
+                        LogMessage(errorMsg);
+                        OnError?.Invoke(errorMsg);
                         try
                         {
                             await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);

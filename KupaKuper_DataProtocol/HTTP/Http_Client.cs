@@ -1,12 +1,13 @@
 using System.Text;
 using System.Net.Http.Headers;
+using System.IO;
 
 namespace KupaKuper_DataProtocol.HTTP
 {
     /// <summary>
     /// 一个简单的HttpClient帮助类，提供了发送GET和POST请求的方法，并且在请求过程中处理异常。
     /// </summary>
-    public static class HttpClientHelp
+    public static class Http_Client
     {
         /// <summary>
         /// HttpClient 是一个线程安全的类，建议在应用程序的整个生命周期内重用一个实例。
@@ -17,10 +18,62 @@ namespace KupaKuper_DataProtocol.HTTP
         /// </summary>
         public static HttpClient Help { get { return client; } }
         
-        static HttpClientHelp()
+        /// <summary>
+        /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
+        /// </summary>
+        public static string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+        
+        /// <summary>
+        /// 是否启用文件日志，默认 true
+        /// </summary>
+        public static bool LogToFile { get; set; } = true;
+        
+        /// <summary>
+        /// 日志输出事件，可绑定自定义日志处理
+        /// </summary>
+        public static event Action<string> Log;
+        
+        static Http_Client()
         {
             // 设置默认超时时间为30秒
             client.Timeout = TimeSpan.FromSeconds(30);
+            
+            // 确保日志目录存在
+            EnsureLogDirectoryExists();
+        }
+        
+        private static void EnsureLogDirectoryExists()
+        {
+            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            {
+                Directory.CreateDirectory(LogDirectory);
+            }
+        }
+        
+        private static void LogMessage(string msg)
+        {
+            string fullMsg = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {msg}";
+            
+            // 触发外部日志事件
+            Log?.Invoke(fullMsg);
+            
+            // 写入文件日志
+            if (LogToFile)
+            {
+                try
+                {
+                    string logFile = Path.Combine(LogDirectory, $"http_client_{DateTime.Now:yyyy-MM-dd}.log");
+                    File.AppendAllText(logFile, fullMsg + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    // 日志写入失败时，输出到控制台
+                    Console.WriteLine($"[日志错误] {ex.Message}");
+                }
+            }
+            
+            // 默认输出到控制台
+            Console.WriteLine(fullMsg);
         }
         
         /// <summary>
@@ -68,12 +121,13 @@ namespace KupaKuper_DataProtocol.HTTP
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
+                LogMessage($"响应: {responseBody}");
                 return responseBody;
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"请求异常: {e.Message}");
+                string errorMsg = $"请求异常: {e.Message}";
+                LogMessage(errorMsg);
                 return $"err:{e.Message}";
             }
         }
@@ -97,12 +151,13 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpResponseMessage response = await client.PostAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
+                LogMessage($"响应: {responseBody}");
                 return responseBody;
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"请求异常: {e.Message}");
+                string errorMsg = $"请求异常: {e.Message}";
+                LogMessage(errorMsg);
                 return $"err:{e.Message}";
             }
         }
@@ -124,12 +179,13 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpResponseMessage response = await client.PostAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
+                LogMessage($"响应: {responseBody}");
                 return responseBody;
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"请求异常: {e.Message}");
+                string errorMsg = $"请求异常: {e.Message}";
+                LogMessage(errorMsg);
                 return $"err:{e.Message}";
             }
         }
@@ -153,12 +209,13 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpResponseMessage response = await client.PutAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
+                LogMessage($"响应: {responseBody}");
                 return responseBody;
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"请求异常: {e.Message}");
+                string errorMsg = $"请求异常: {e.Message}";
+                LogMessage(errorMsg);
                 return $"err:{e.Message}";
             }
         }
@@ -180,12 +237,13 @@ namespace KupaKuper_DataProtocol.HTTP
                 HttpResponseMessage response = await client.PutAsync(url, httpContent);
                 response.EnsureSuccessStatusCode(); // 如果状态码不是 2xx，则抛出异常
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
+                LogMessage($"响应: {responseBody}");
                 return responseBody;
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($"请求异常: {e.Message}");
+                string errorMsg = $"请求异常: {e.Message}";
+                LogMessage(errorMsg);
                 return $"err:{e.Message}";
             }
         }

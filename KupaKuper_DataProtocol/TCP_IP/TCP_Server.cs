@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
 
 namespace KupaKuper_TcpIp.TCP_IP
 {
@@ -56,6 +57,21 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// 心跳循环时间(秒)
         /// </summary>
         public int HeartBeatCyclicTime { get; set; } = 5;
+        
+        /// <summary>
+        /// 日志存储目录，默认存储到执行文件夹下的/log文件夹
+        /// </summary>
+        public string LogDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+        
+        /// <summary>
+        /// 是否启用文件日志，默认 true
+        /// </summary>
+        public bool LogToFile { get; set; } = true;
+        
+        /// <summary>
+        /// 日志输出事件，可绑定自定义日志处理
+        /// </summary>
+        public event Action<string> Log;
 
         // ========== 公共事件 ==========
 
@@ -81,6 +97,43 @@ namespace KupaKuper_TcpIp.TCP_IP
             _connections = new Dictionary<string, TCP_Connection>();
             _tcpClients = new Dictionary<string, TcpClient>();
             _cancellationTokenSource = new CancellationTokenSource();
+            
+            // 确保日志目录存在
+            EnsureLogDirectoryExists();
+        }
+        
+        private void EnsureLogDirectoryExists()
+        {
+            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+            {
+                Directory.CreateDirectory(LogDirectory);
+            }
+        }
+        
+        private void LogMessage(string msg)
+        {
+            string fullMsg = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [TCP_Server] {msg}";
+            
+            // 触发外部日志事件
+            Log?.Invoke(fullMsg);
+            
+            // 写入文件日志
+            if (LogToFile)
+            {
+                try
+                {
+                    string logFile = Path.Combine(LogDirectory, $"tcp_server_{DateTime.Now:yyyy-MM-dd}.log");
+                    File.AppendAllText(logFile, fullMsg + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    // 日志写入失败时，输出到控制台
+                    Console.WriteLine($"[日志错误] {ex.Message}");
+                }
+            }
+            
+            // 默认输出到控制台
+            Console.WriteLine(fullMsg);
         }
 
         // ========== 公共方法 ==========
@@ -93,14 +146,18 @@ namespace KupaKuper_TcpIp.TCP_IP
             // 初始化 TCP 监听器，监听所有网络接口
             _listener = new TcpListener(IPAddress.Any, _port);
             _listener.Start();
+            LogMessage($"服务器已启动，监听端口 {_port}");
 
             // 获取并设置服务器本地 IP 地址
             ServerIP = GetLocalIPAddress();
+            LogMessage($"服务器 IP 地址: {ServerIP}");
 
             // 启动心跳检测任务
             _heartbeatTask = Task.Run(() => HeartbeatLoopAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            LogMessage("心跳检测任务已启动");
 
             // 开始接受客户端连接
+            LogMessage("开始接受客户端连接");
             await AcceptConnectionsAsync(_cancellationTokenSource.Token);
         }
 
@@ -109,6 +166,7 @@ namespace KupaKuper_TcpIp.TCP_IP
         /// </summary>
         public async Task StopAsync()
         {
+            LogMessage("正在停止服务器...");
             // 发送取消信号
             _cancellationTokenSource.Cancel();
 
@@ -123,34 +181,39 @@ namespace KupaKuper_TcpIp.TCP_IP
                 {
                     // 任务被取消是正常的
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // 忽略其他异常，确保服务器能正常停止
+                    LogMessage($"心跳任务结束异常: {ex.Message}");
                 }
             }
 
             // 停止 TCP 监听器
             _listener?.Stop();
+            LogMessage("TCP 监听器已停止");
 
             // 关闭所有客户端连接
             lock (_connectionLock)
             {
+                int count = _tcpClients.Count;
+                LogMessage($"关闭 {count} 个客户端连接");
                 foreach (var client in _tcpClients.Values)
                 {
                     try
                     {
                         client.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // 忽略关闭连接时的异常
+                        LogMessage($"关闭连接异常: {ex.Message}");
                     }
                 }
                 
                 // 清空连接字典
                 _connections.Clear();
                 _tcpClients.Clear();
+                LogMessage("连接字典已清空");
             }
+            LogMessage("服务器已停止");
         }
 
         // ========== 私有方法 ==========
@@ -178,9 +241,10 @@ namespace KupaKuper_TcpIp.TCP_IP
                     break;
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine($"[错误] 接受连接时出错: {ex.Message}");
-                }
+            {
+                string errorMsg = $"接受连接时出错: {ex.Message}";
+                LogMessage(errorMsg);
+            }
             }
         }
 
@@ -193,6 +257,7 @@ namespace KupaKuper_TcpIp.TCP_IP
             var clientIp = endPoint.Address.ToString();
             var clientPort = endPoint.Port;
             var connectionKey = $"{clientIp}:{clientPort}";
+            LogMessage($"收到新连接: {connectionKey}");
 
             // 创建 TCP_Connection
             var connection = new TCP_Connection(clientIp, clientPort);
@@ -204,10 +269,12 @@ namespace KupaKuper_TcpIp.TCP_IP
                     {
                         _connections.Remove(connectionKey);
                         _tcpClients.Remove(connectionKey);
+                        LogMessage($"连接断开: {connectionKey}");
                     }
                     else
                     {
                         connection.SendMessage($"{ServerIP}:{_port},ConnectedSuccess");
+                        LogMessage($"连接成功: {connectionKey}");
                     }
                 }
                 if (!connected)
@@ -245,15 +312,18 @@ namespace KupaKuper_TcpIp.TCP_IP
                 {
                     _connections[connectionKey] = connection;
                     _tcpClients[connectionKey] = client;
+                    LogMessage($"更新连接: {connectionKey}");
                 }
                 else
                 {
                     _connections.Add(connectionKey, connection);
                     _tcpClients.Add(connectionKey, client);
+                    LogMessage($"添加新连接: {connectionKey}");
                 }
             }
             connection.IsConnected = true;
             HaveNewConnection?.Invoke(connection);
+            LogMessage($"新连接已处理: {connectionKey}");
             // 接收数据
             await ReceiveDataAsync(client, connection, cancellationToken);
         }
@@ -285,10 +355,11 @@ namespace KupaKuper_TcpIp.TCP_IP
                     }
 
                     // 将字节数组转换为字符串
-                    var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    
-                    // 触发接收消息事件
-                    connection.ReceiveMessage(message);
+                var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                LogMessage($"从 {connection.IP}:{connection.Port} 接收消息: {message}");
+                
+                // 触发接收消息事件
+                connection.ReceiveMessage(message);
                 }
             }
             catch (OperationCanceledException)
@@ -297,12 +368,14 @@ namespace KupaKuper_TcpIp.TCP_IP
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[错误] 接收数据时出错: {ex.Message}");
+                string errorMsg = $"接收数据时出错: {ex.Message}";
+                LogMessage(errorMsg);
             }
             finally
             {
                 // 设置连接状态为断开
                 connection.IsConnected = false;
+                LogMessage($"连接 {connection.IP}:{connection.Port} 已关闭");
                 
                 // 关闭客户端连接
                 try
@@ -342,12 +415,13 @@ namespace KupaKuper_TcpIp.TCP_IP
                             if (connection.OpenHeartBeat)
                             {
                                 // 发送心跳消息
-                                if (!connection.SendMessage(connection.HeartBeatMessage))
-                                {
-                                    // 心跳发送失败，记录该连接
-                                    disconnectedKeys.Add(key);
-                                    disconnectedConnections.Add(connection);
-                                }
+                        if (!connection.SendMessage(connection.HeartBeatMessage))
+                        {
+                            // 心跳发送失败，记录该连接
+                            disconnectedKeys.Add(key);
+                            disconnectedConnections.Add(connection);
+                            LogMessage($"心跳检测失败，连接断开: {key}");
+                        }
                             }
                         }
 
@@ -374,19 +448,20 @@ namespace KupaKuper_TcpIp.TCP_IP
                     break;
                 }
                 catch (Exception ex)
+            {
+                string errorMsg = $"心跳检测出错: {ex.Message}";
+                LogMessage(errorMsg);
+                
+                // 发生异常后，延时 10 秒继续
+                try
                 {
-                    Console.WriteLine($"[错误] 心跳检测出错: {ex.Message}");
-                    
-                    // 发生异常后，延时 10 秒继续
-                    try
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
+                    await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
                 }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+            }
             }
         }
 
@@ -404,8 +479,11 @@ namespace KupaKuper_TcpIp.TCP_IP
             {
                 if (_connections.TryGetValue(connectionKey, out var connection))
                 {
-                    return connection.SendMessage(message);
+                    bool result = connection.SendMessage(message);
+                    LogMessage($"发送消息到 {connectionKey}: {message} (结果: {result})");
+                    return result;
                 }
+                LogMessage($"发送失败，连接不存在: {connectionKey}");
                 return false;
             }
         }
@@ -422,8 +500,11 @@ namespace KupaKuper_TcpIp.TCP_IP
             {
                 if (_connections.TryGetValue(ipPort, out var conn))
                 {
-                    return conn.SendMessage(message);
+                    bool result = conn.SendMessage(message);
+                    LogMessage($"发送消息到 {ipPort}: {message} (结果: {result})");
+                    return result;
                 }
+                LogMessage($"发送失败，连接不存在: {ipPort}");
                 return false;
             }
         }
@@ -436,6 +517,8 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             lock (_connectionLock)
             {
+                int count = _connections.Count;
+                LogMessage($"广播消息到 {count} 个连接: {message}");
                 foreach (var connection in _connections.Values)
                 {
                     connection.SendMessage(message);
@@ -452,13 +535,20 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             lock (_connectionLock)
             {
+                int sentCount = 0;
                 foreach (var ipPort in listIpPort)
                 {
                     if (_connections.TryGetValue(ipPort, out var conn))
                     {
                         conn.SendMessage(message);
+                        sentCount++;
+                    }
+                    else
+                    {
+                        LogMessage($"发送失败，连接不存在: {ipPort}");
                     }
                 }
+                LogMessage($"批量发送消息到 {sentCount} 个连接: {message}");
             }
         }
 
@@ -470,6 +560,8 @@ namespace KupaKuper_TcpIp.TCP_IP
         {
             lock (_connectionLock)
             {
+                int count = _connections.Count;
+                LogMessage($"获取当前连接数: {count}");
                 return new Dictionary<string, TCP_Connection>(_connections);
             }
         }
